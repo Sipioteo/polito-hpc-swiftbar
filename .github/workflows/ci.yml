@@ -1,0 +1,54 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  syntax:
+    name: zsh syntax
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: zsh -n
+        run: |
+          set -e
+          for f in HPC_Monitor.10s.sh PoliTO_VPN.5s.sh install.sh; do
+            echo "checking $f"
+            zsh -n "$f"
+          done
+
+  shellcheck:
+    name: shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: ShellCheck
+        uses: ludeeus/action-shellcheck@2.0.0
+        env:
+          # Trattati come bash, ShellCheck non supporta zsh.
+          # Disabilitati i check più rumorosi su pattern che usiamo molto in zsh.
+          SHELLCHECK_OPTS: >-
+            --shell=bash
+            --severity=warning
+            --exclude=SC1071,SC1090,SC1091,SC2034,SC2086,SC2128,SC2155,SC2168,SC2206,SC2207,SC2296,SC2299,SC2030,SC2031
+        with:
+          scandir: '.'
+
+  secrets:
+    name: gitleaks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: gitleaks scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

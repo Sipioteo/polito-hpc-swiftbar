@@ -1,0 +1,21 @@
+# SwiftBar prova a caricare come plugin qualunque file nella sua dir.
+# Escludiamo tutto ciò che non è uno script di plugin.
+
+.git/
+.gitignore
+.swiftbarignore
+docs/
+README.md
+LICENSE
+install.sh
+*.md
+*.png
+*.jpg
+*.jpeg
+*.svg
+*.log
+*.bak
+*.tmp
+*.swp
+*~
+.DS_Store
