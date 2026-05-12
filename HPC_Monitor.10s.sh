@@ -12,7 +12,7 @@
 # <xbar.desc>Dashboard SwiftBar per il cluster Slurm "Legion" del Politecnico di Torino. Mostra nodi liberi per tier hardware (GPU H200/A100/A40/V100, CPU Skylake/Sapphire), job in esecuzione/coda dell'utente, stato per risorsa con sotto-code per partizione, fair-share, manutenzione, log dei job, e azione "Disconnetti VPN". Si autoesclude quando la VPN PoliTO non è attiva (vedi plugin compagno PoliTO_VPN.5s.sh).</xbar.desc>
 # <xbar.dependencies>zsh,ssh,openfortivpn,tmux</xbar.dependencies>
 # <xbar.abouturl>https://github.com/Sipioteo/polito-hpc-swiftbar</xbar.abouturl>
-# <xbar.image>https://raw.githubusercontent.com/Sipioteo/polito-hpc-swiftbar/main/docs/screenshot.png</xbar.image>
+# <xbar.image>https://raw.githubusercontent.com/Sipioteo/polito-hpc-swiftbar/main/docs/icon-1024.png</xbar.image>
 #
 # <xbar.var>string(VAR_HOST="hpc-polito"): SSH host/alias del cluster (definito in ~/.ssh/config)</xbar.var>
 # <xbar.var>number(VAR_SSH_TIMEOUT=3): Timeout SSH in secondi</xbar.var>

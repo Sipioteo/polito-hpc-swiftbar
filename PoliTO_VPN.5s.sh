@@ -12,6 +12,7 @@
 # <xbar.desc>Controllo VPN PoliTO via openfortivpn + SAML login. Gestisce connect/disconnect, mostra stato e uptime. Si autoesclude quando connesso (lascia spazio al plugin HPC_Monitor). Refresha SwiftBar automaticamente ai cambi di stato. Richiede openfortivpn installato (brew install openfortivpn) e una entry NOPASSWD in sudoers (vedi README).</xbar.desc>
 # <xbar.dependencies>zsh,openfortivpn,tmux</xbar.dependencies>
 # <xbar.abouturl>https://github.com/Sipioteo/polito-hpc-swiftbar</xbar.abouturl>
+# <xbar.image>https://raw.githubusercontent.com/Sipioteo/polito-hpc-swiftbar/main/docs/icon-1024.png</xbar.image>
 #
 # <xbar.var>string(VAR_VPN_HOST="vpn.polito.it:443">Hostname/porta gateway VPN</xbar.var>
 # <xbar.var>string(VAR_TMUX_SESSION="polito-vpn"): Nome sessione tmux dove gira openfortivpn</xbar.var>
