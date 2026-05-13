@@ -597,7 +597,23 @@ render_resource_status() {
     done
 
     if [ ${#tier_node_lines[@]} -gt 0 ]; then
-      echo "-- Nodi (${#tier_node_lines[@]}) | sfimage=server.rack"
+      # Quando il tier ha un solo nodo (es. GPU H200, A100, Sapphire 192c)
+      # saltiamo l'intermedio "Nodi (1)" e mostriamo nodo + job direttamente
+      # un livello su, evitando un click inutile.
+      local _SINGLE=0
+      [ ${#tier_node_lines[@]} -eq 1 ] && _SINGLE=1
+      if [ $_SINGLE -eq 0 ]; then
+        echo "-- Nodi (${#tier_node_lines[@]}) | sfimage=server.rack"
+      fi
+
+      # Prefisso indentazione: 2 dashes se single-node (sale di un livello)
+      local _NODE_PFX="----"
+      local _JOB_PFX="------"
+      if [ $_SINGLE -eq 1 ]; then
+        _NODE_PFX="--"
+        _JOB_PFX="----"
+      fi
+
       for ln in "${tier_node_lines[@]}"; do
         IFS='|' read -r NN ST PT CA CT MA MT GU GT GR <<< "$ln"
         # Build per-node stats
@@ -619,12 +635,12 @@ render_resource_status() {
         #   nodename %-12s · cpu %3d/%-3d · mem %4s/%-4s · [gpu %d/%d ·] state
         if [ "$kind" = "gpu" ]; then
           nsfim="memorychip"
-          printf -- "---- %-12s cpu=%3d/%-3d  mem=%4s/%-4s  gpu=%d/%-2d %-12s | font=Menlo color=%s sfimage=%s\n" \
-            "$NN" "$CA" "$CT" "$(fmt_mem $MA)" "$(fmt_mem $MT)" "$GU" "$GT" "$state_badge" "$nclr" "$nsfim"
+          printf -- "%s %-12s cpu=%3d/%-3d  mem=%4s/%-4s  gpu=%d/%-2d %-12s | font=Menlo color=%s sfimage=%s\n" \
+            "$_NODE_PFX" "$NN" "$CA" "$CT" "$(fmt_mem $MA)" "$(fmt_mem $MT)" "$GU" "$GT" "$state_badge" "$nclr" "$nsfim"
         else
           nsfim="cpu"
-          printf -- "---- %-12s cpu=%3d/%-3d  mem=%4s/%-4s              %-12s | font=Menlo color=%s sfimage=%s\n" \
-            "$NN" "$CA" "$CT" "$(fmt_mem $MA)" "$(fmt_mem $MT)" "$state_badge" "$nclr" "$nsfim"
+          printf -- "%s %-12s cpu=%3d/%-3d  mem=%4s/%-4s              %-12s | font=Menlo color=%s sfimage=%s\n" \
+            "$_NODE_PFX" "$NN" "$CA" "$CT" "$(fmt_mem $MA)" "$(fmt_mem $MT)" "$state_badge" "$nclr" "$nsfim"
         fi
 
         # Jobs on this node
@@ -639,7 +655,7 @@ render_resource_status() {
             fi
             GINFO=""
             [ -n "$JG" ] && [ "$JG" != "N/A" ] && [ "$JG" != "(null)" ] && GINFO="  $(esc "$JG")"
-            echo "------ $JU  job=$JID$GINFO  t=$JT  [$(esc "$JP")] | font=Menlo $jcolor sfimage=$jsfim$jsfcol"
+            echo "$_JOB_PFX $JU  job=$JID$GINFO  t=$JT  [$(esc "$JP")] | font=Menlo $jcolor sfimage=$jsfim$jsfcol"
           done
         fi
       done
